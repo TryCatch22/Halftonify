@@ -1,0 +1,17 @@
+﻿<Window x:Class="Halftonify.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="663.094" Width="1289.032">
+    <Grid>
+        <Button Content="Select Image" Click="SelectImage_Click" HorizontalAlignment="Left" Margin="510,10,0,0" VerticalAlignment="Top" Width="80" Height="30"/>
+        <Label Name="FilepathLabel" Content="" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="30" Width="495" Background="#FFDDDDDD"/>
+        <Button Content="Halftonify" Click="Halftonify_Click" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Width="80" Height="30"/>
+        <Button Content="Save Image" Click="SaveImage_Click" HorizontalAlignment="Left" Margin="686,10,0,0" VerticalAlignment="Top" Width="74" Height="30"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="auto" Margin="10,45,0,0" VerticalAlignment="Stretch" Width="580">
+            <Image Name="InputImage" Width="auto" Height="auto"/>
+        </Border>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Right" Height="auto" Margin="0,45,0,0" VerticalAlignment="Stretch" Width="595">
+            <Image Name="OutputImage" Width="auto" Height="auto"/>
+        </Border>
+    </Grid>
+</Window>
