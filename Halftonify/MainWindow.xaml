@@ -1,11 +1,11 @@
 ﻿<Window x:Class="Halftonify.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" MinHeight="600" MinWidth="1200">
+        Title="MainWindow" MinHeight="500" MinWidth="1200">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*" />
-            <ColumnDefinition Width="1*" MinWidth="100" />
+            <ColumnDefinition Width="1*" MinWidth="120" />
             <ColumnDefinition Width="6*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -20,6 +20,12 @@
         </Border>
 
         <Button Grid.Column="1" Grid.Row="0" Content="Halftonify" Click="Halftonify_Click" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Top" MinWidth="80" Height="30"/>
+        <CheckBox Grid.Column="1" Grid.Row="1" Name="DrawGrid" Content="Draw Grid" Checked="DrawGrid_Changed" Unchecked="DrawGrid_Changed" Margin="10"/>
+        <CheckBox Grid.Column="1" Grid.Row="1" Name="DrawNumbers" Content="Draw Numbers" Checked="DrawNumbers_Changed" Unchecked="DrawNumbers_Changed" Margin="10,30,10,10"/>
+        <CheckBox Grid.Column="1" Grid.Row="1" Name="ColourBySize" Content="Colour By Size" Checked="ColourBySize_Changed" Unchecked="ColourBySize_Changed" Margin="10,50,10,10"/>
+        <Label Grid.Column="1" Grid.Row="1" Name="TileSizeLabel" Content="Tile Size" Margin="5,70,40,10"/>
+        <Label Grid.Column="1" Grid.Row="1" Name="TileSizeValueLabel" Content="50" HorizontalAlignment="Right" MaxWidth="30" Margin="5,70,5,10"/>
+        <Slider Grid.Column="1" Grid.Row="1" Name="TileSize" Minimum="5" Maximum="50" Value="18" ValueChanged="TileSize_Changed" Margin="5,95,5,10"/>
 
         <Button Grid.Column="2" Grid.Row="0" Content="Save Image" Click="SaveImage_Click" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" MinWidth="80" Height="30"/>
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Stretch" Margin="10" VerticalAlignment="Stretch">

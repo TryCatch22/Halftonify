@@ -9,11 +9,15 @@ namespace Halftonify
 {
     public partial class MainWindow : Window
     {
-        private Bitmap inputBitmap = null;
-        private Bitmap outputBitmap = null;
+        private Bitmap _inputBitmap = null;
+        private Bitmap _outputBitmap = null;
+
+        private bool _drawGrid;
+        private bool _drawNumbers;
+        private bool _colourBySize;
+        private int _tileSize;
 
         // TODO: Make these configurable in the window
-        private const int TILE_SIZE = 18;
         private const float RADIUS_MAX_FACTOR = 0.75f;
         private const float RADIUS_MIN_FACTOR = 0.15f;
 
@@ -31,68 +35,110 @@ namespace Halftonify
             if (dialog.ShowDialog() == true)
             {
                 FilepathLabel.Content = dialog.FileName;
-                inputBitmap = new Bitmap(dialog.FileName);
-                outputBitmap = new Bitmap(dialog.FileName);
-                InputImage.Source = LoadBitmap(inputBitmap);
+                _inputBitmap = new Bitmap(dialog.FileName);
+                _outputBitmap = new Bitmap(dialog.FileName);
+                InputImage.Source = LoadBitmap(_inputBitmap);
             }
             else
             {
-                inputBitmap = null;
-                outputBitmap = null;
+                _inputBitmap = null;
+                _outputBitmap = null;
                 InputImage.Source = null;
             }
         }
 
+        private void DrawGrid_Changed(object sender, RoutedEventArgs e)
+        {
+            _drawGrid = (sender as System.Windows.Controls.CheckBox).IsChecked.Value;
+        }
+
+        private void DrawNumbers_Changed(object sender, RoutedEventArgs e)
+        {
+            _drawNumbers = (sender as System.Windows.Controls.CheckBox).IsChecked.Value;
+        }
+
+        private void ColourBySize_Changed(object sender, RoutedEventArgs e)
+        {
+            _colourBySize = (sender as System.Windows.Controls.CheckBox).IsChecked.Value;
+        }
+
+        private void TileSize_Changed(object sender, RoutedEventArgs e)
+        {
+            _tileSize = (int)((sender as System.Windows.Controls.Slider).Value);
+            TileSizeValueLabel.Content = _tileSize.ToString();
+        }
+
         private void Halftonify_Click(object sender, RoutedEventArgs e)
         {
-            if (inputBitmap != null &&
-                outputBitmap != null)
+            if (_inputBitmap != null &&
+                _outputBitmap != null)
             {
-                outputBitmap = CreateNonIndexedImage(outputBitmap);
+                _outputBitmap = CreateNonIndexedImage(_outputBitmap);
 
                 ClearOutput();
 
-                int tilesX = inputBitmap.Width / TILE_SIZE + 1;
-                int tilesY = inputBitmap.Height / TILE_SIZE + 1;
+                int tilesX = _inputBitmap.Width / _tileSize + 1;
+                int tilesY = _inputBitmap.Height / _tileSize + 1;
 
-                Graphics outputGraphics = Graphics.FromImage(outputBitmap);
+                Graphics outputGraphics = Graphics.FromImage(_outputBitmap);
                 Font arial = new Font("Arial", 8);
 
                 for (int tileY = 0; tileY < tilesY; tileY++)
                 {
-                    int startPixelY = tileY * TILE_SIZE;
-                    int tileSizeY = Math.Min(TILE_SIZE, inputBitmap.Height - startPixelY);
+                    int startPixelY = tileY * _tileSize;
+                    int tileSizeY = Math.Min(_tileSize, _inputBitmap.Height - startPixelY);
 
-                    outputGraphics.DrawLine(Pens.Gray, 0.0f, startPixelY + tileSizeY / 2.0f, outputBitmap.Width, startPixelY + tileSizeY / 2.0f);
-                    outputGraphics.DrawString((tilesY - (tileY + 1)).ToString(), arial, Brushes.Gray, 0.0f, startPixelY);
-                    outputGraphics.DrawString((tilesY - (tileY + 1)).ToString(), arial, Brushes.Gray, outputBitmap.Width - tileSizeY, startPixelY); // TODO: Fix hax
+                    if (_drawGrid)
+                    {
+                        outputGraphics.DrawLine(Pens.Gray, 0.0f, startPixelY + tileSizeY / 2.0f, _outputBitmap.Width, startPixelY + tileSizeY / 2.0f);
+                    }
+
+                    if (_drawNumbers)
+                    {
+                        outputGraphics.DrawString((tilesY - (tileY + 1)).ToString(), arial, Brushes.Gray, 0.0f, startPixelY);
+                        outputGraphics.DrawString((tilesY - (tileY + 1)).ToString(), arial, Brushes.Gray, _outputBitmap.Width - tileSizeY, startPixelY); // TODO: Fix hax
+                    }
                 }
 
                 for (int tileX = 0; tileX < tilesX; tileX++)
                 {
-                    int startPixelX = tileX * TILE_SIZE;
-                    int tileSizeX = Math.Min(TILE_SIZE, inputBitmap.Width - startPixelX);
+                    int startPixelX = tileX * _tileSize;
+                    int tileSizeX = Math.Min(_tileSize, _inputBitmap.Width - startPixelX);
 
-                    outputGraphics.DrawLine(Pens.Gray, startPixelX + tileSizeX / 2.0f, 0.0f, startPixelX + tileSizeX / 2.0f, outputBitmap.Height);
-                    outputGraphics.DrawString((tileX + 0).ToString(), arial, Brushes.Gray, startPixelX, 0.0f);
-                    outputGraphics.DrawString((tileX + 0).ToString(), arial, Brushes.Gray, startPixelX, outputBitmap.Height - tileSizeX); // TODO: Fix hax
+                    if (_drawGrid)
+                    {
+                        outputGraphics.DrawLine(Pens.Gray, startPixelX + tileSizeX / 2.0f, 0.0f, startPixelX + tileSizeX / 2.0f, _outputBitmap.Height);
+                    }
+
+                    if (_drawNumbers)
+                    {
+                        outputGraphics.DrawString((tileX + 0).ToString(), arial, Brushes.Gray, startPixelX, 0.0f);
+                        outputGraphics.DrawString((tileX + 0).ToString(), arial, Brushes.Gray, startPixelX, _outputBitmap.Height - tileSizeX); // TODO: Fix hax
+                    }
 
                     for (int tileY = 0; tileY < tilesY; tileY++)
                     {
-                        int startPixelY = tileY * TILE_SIZE;
-                        int tileSizeY = Math.Min(TILE_SIZE, inputBitmap.Height - startPixelY);
+                        int startPixelY = tileY * _tileSize;
+                        int tileSizeY = Math.Min(_tileSize, _inputBitmap.Height - startPixelY);
                         float darkness = GetTileDarkness(startPixelX, startPixelY, tileSizeX, tileSizeY);
 
-                        float radiusInitial = RADIUS_MAX_FACTOR * darkness * TILE_SIZE / 2.0f;
-                        RadiusInfo radiusFinal = GetSteppedRadius(radiusInitial, RADIUS_MIN_FACTOR * TILE_SIZE / 2.0f, RADIUS_MAX_FACTOR * TILE_SIZE / 2.0f);
+                        float radiusInitial = RADIUS_MAX_FACTOR * darkness * _tileSize / 2.0f;
+                        RadiusInfo radiusFinal = GetSteppedRadius(radiusInitial, RADIUS_MIN_FACTOR * _tileSize / 2.0f, RADIUS_MAX_FACTOR * _tileSize / 2.0f);
 
                         // TODO: Change size based on darkness.
                         //workingGraphics.FillEllipse(Brushes.Black, startPixelX, startPixelY, tileSizeX, tileSizeY);
-                        outputGraphics.DrawCircle(radiusFinal.BrushColor, startPixelX + tileSizeX / 2.0f, startPixelY + tileSizeY / 2.0f, radiusFinal.Radius);
+                        if (_colourBySize)
+                        {
+                            outputGraphics.DrawCircle(radiusFinal.BrushColor, startPixelX + tileSizeX / 2.0f, startPixelY + tileSizeY / 2.0f, radiusFinal.Radius);
+                        }
+                        else
+                        {
+                            outputGraphics.DrawCircle(Brushes.Black, startPixelX + tileSizeX / 2.0f, startPixelY + tileSizeY / 2.0f, radiusFinal.Radius);
+                        }
                     }
                 }
 
-                OutputImage.Source = LoadBitmap(outputBitmap);
+                OutputImage.Source = LoadBitmap(_outputBitmap);
             }
         }
 
@@ -144,7 +190,7 @@ namespace Halftonify
 
         private void SaveImage_Click(object sender, RoutedEventArgs e)
         {
-            if (outputBitmap != null)
+            if (_outputBitmap != null)
             {
                 SaveFileDialog dialog = new SaveFileDialog();
                 dialog.FileName = "Image";
@@ -153,18 +199,18 @@ namespace Halftonify
 
                 if (dialog.ShowDialog() == true)
                 {
-                    outputBitmap.Save(dialog.FileName);
+                    _outputBitmap.Save(dialog.FileName);
                 }
             }
         }
 
         private void ClearOutput()
         {
-            for (int x = 0; x < outputBitmap.Width; x++)
+            for (int x = 0; x < _outputBitmap.Width; x++)
             {
-                for (int y = 0; y < outputBitmap.Height; y++)
+                for (int y = 0; y < _outputBitmap.Height; y++)
                 {
-                    outputBitmap.SetPixel(x, y, Color.White);
+                    _outputBitmap.SetPixel(x, y, Color.White);
                 }
             }
         }
@@ -178,7 +224,7 @@ namespace Halftonify
             {
                 for (int y = startY; y < startY + sizeY; y++)
                 {
-                    Color pixel = inputBitmap.GetPixel(x, y);
+                    Color pixel = _inputBitmap.GetPixel(x, y);
                     totalBrightness += pixel.R;
                     totalBrightness += pixel.G;
                     totalBrightness += pixel.B;
