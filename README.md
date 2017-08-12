@@ -13,6 +13,8 @@ This project is less for the artistic effect (go download Photoshop or any smila
 
 ![Halftonify Woodworking DIY Art Project, Picture of the Results](SampleImages/ProjectResults.png?raw=true "Halftonify Woodworking Project Results")
 
-We made this with it. We drew a grid by hand and drilled at the intersetions, but you could also try printing the image on multiple sheets, taping it on, and drilling through the paper.
+We made this with it. We drew a grid by hand and drilled at the intersections, but you could also try printing the image on multiple sheets, taping it on, and drilling through the paper.
 
-GLHF
+GLHF <3
+
+SB+MH
